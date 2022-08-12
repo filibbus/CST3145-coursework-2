@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <Style>
+       body{
+           background-color: rgb(13, 238, 43);
+          
+       }
+       button{
+           margin-right: 20px;
+           border-radius: 20px;
+       }
+       /* .lessons{
+           padding-bottom: 40px;
+           padding-top: 40px;
+           padding-right: 40px;
+           padding-left: 40px;
+
+       } */
+   </Style>
+</head>
+
+<body>
+    <div id="app" class="container-fluid p-5">
+            <header>
+                
+                
+                <nav class="navbar navbar-expand-sm navbar-light bg-light">
+                    <h1 class="navbar-brand" v-text="sitename"></h1>
+                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                    <button class="btn btn-dark" v-if="cart.length > 0" v-on:click='showCheckout'> {{cart.length}} <span
+                        class="fas fa-cart-plus"></span>Cart
+                    </button> <br>
+                    <div class="collapse navbar-collapse" id="collapsibleNavId">
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <button class="btn btn-primary" v-on:click="type = 'subject'">Subject</button>
+                            </li>
+                            <br>
+                            <li class="nav-item">
+                                <button class="btn btn-primary" v-on:click="type = 'price'">Price</button>
+                            </li>
+                            <br>
+                            <li class="nav-item">
+                                <button class="btn btn-primary" v-on:click="type = 'Location'">Location</button>
+                            </li>
+                            <br>
+                            <li class="nav-item dropdown">
+                                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="sort" id="sortby">
+                                    <option value="ascending">Ascending</option>
+    
+                                    <option value="descending">Descending</option>
+                                </select>
+                            </li>
+                        </ul>
+                        <form class="form-inline my-2 my-lg-0">
+                            <div class="search-wrapper">
+                                <input v-on:input="filteredList" class="form-control mr-sm-2" type="text" v-model="search" placeholder="Search Subject or Location.."/>
+                              </div>
+                        </form>
+                    </div>
+                </nav>
+    
+                   
+            </header>
+        
+        
+        <div class="container">
+            <div class="root">
+            <!-- sorting -->
+
+            
+                <!-- <aside>
+                    <h4>Sort by</h4>
+                    <ul>
+                        <li><button class="btn btn-primary" v-on:click="type = 'subject'">Subject</button></li>
+                        <li><button class="btn btn-primary" v-on:click="type = 'price'">Price</button></li>
+                        <li><button class="btn btn-primary" v-on:click="type = 'Location'">Location</button></li>
+                    </ul>
+                    <br>
+                    
+                </aside> -->
+                <main>
+                    <div v-if='!showProduct' class="row">
+                        
+                       
+                        <!-- lessons-->
+                        
+                                    <div v-for="(lessons, index) in sortedLessons" :key="`lesson--${index}`"
+                                    class="lessons__item col-md-3 py-2">
+                                            <img class="card-img-top" v-bind:src="lessons.image" width="200" height="250" >
+                                        <h2 class="card-title"><p>Subject: {{ lessons.subject }}</p></h2>
+                                        
+                                        <p class="card-text">Location: {{ lessons.location }}</p>
+                                        <p class="card-text">Price: {{ lessons.price }}</p>
+                                        <div>
+                                            <span v-for='n in lessons.rating'>★ </span>
+                                            
+                                            <span v-for='n in 5-lessons.rating'>☆</span>
+                                        </div>
+                                        <p class="card-text">Spaces: {{lessons.availableInventory}}</p>
+                                        <button class="btn btn-dark" v-on:click='addToCart(lessons)' :disabled="!lessons.availableInventory">Add to
+                                            cart</button>
+                                        <span v-if="lessons.availableInventory">{{'Left '+ lessons.availableInventory}}</span>
+                                        <span v-else>This lesson is fully booked!</span>
+                                    </div>
+                                
+                        
+                        <br><br>
+                        <br><br>
+
+
+                       
+                    </div>
+                    <div v-else  >
+                      
+                            <!-- calculation-->
+                            <div class="title-bar">
+                                <button class="btn btn-dark" v-on:click="showCheckout"><span class="fas fa-arrow-left"></span> Go Back </button>
+                                <h4>Total Amount: {{total}}</h4>
+                            </div>
+                            <!-- cart-->
+                            <!-- <div class="float-left">
+                                <div class="card-deck">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Your cart</h4>
+                                    <div class="cart">
+                                        <div class="cart__item">
+                                            <div class="cart__item" v-for="(item, index) in cart" :key="`cart--${index}`">
+                                                <div class="card-img-top" style="width: auto;"><img :src="item.image" alt=""></div>
+                                                <div class="card-text">Subject: {{item.subject}}</div>
+                                                <div class="card-text">Location: {{item.location}}</div>
+                                                <div class="card-text">Price: {{item.price}}</div>
+                                                <div style="width: auto;"><button class="btn btn-danger" v-on:click="removeFromCart(item)"
+                                                            class="fa fa-minus-square" aria-hidden="true">Remove</button></div>
+                                            </div>
+                                        </div>
+                                        <hr style="width: 100%">
+                                        
+                                        <div v-if="!cart.length > 0" class="cart__item"
+                                            style="background-color: transparent; padding: 20px;">
+                                            <div class="card-text" style="text-align: center; color: grey; font-size: 20px; font-weight: bold;">
+                                            List Empty</div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>    --> <h4 class="card-title">Your cart</h4>
+                                   <div class="row">
+                                    <div v-for="(item, index) in cart" :key="`cart--${index}`" class="lessons__item col-md-3 py-2">
+                                        <div class="card-img-top" ><img :src="item.image" alt=""  width="200" height="250"></div>
+                                            <h2 class="card-title">Subject: {{item.subject}}</h2>
+                                            <p class="card-text">Location: {{item.location}}</p>
+                                            <p class="card-text">Price: {{item.price}}</p>
+                                            <div><button class="btn btn-danger" v-on:click="removeFromCart(item)"
+                                                        class="fa fa-minus-square" aria-hidden="true">Remove</button></div>
+                                       
+                                       
+                                    </div>
+                                   </div>
+                                   <br><br>
+                                   <br><br>
+           
+                                               
+                                          
+                                            <hr style="width: 100%">
+                                            
+                                            <div v-if="!cart.length > 0" class="cart__item"
+                                                style="background-color: transparent; padding: 20px;">
+                                                <div class="card-text" style="text-align: center; color: grey; font-size: 20px; font-weight: bold;">
+                                                List Empty</div>
+                                            </div>
+
+                                            <div>
+                               
+                                                <div class="float-left">
+                                                    <div class="card-deck">
+                                                    <div class="card">
+                                                        <form class="card-body">
+                                                                <h3 class="card-title">Student Details</h3>
+                                                                <div>
+                                                                    <label for="name">Your Name</label>
+                                                                    <input class="form-control" v-model="user.name" type="text" required>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="name">Phone Number</label>
+                                                                    <input class="form-control" v-model="user.number" type="tel" required>
+                                                                </div>
+                                                                <br>
+                                                                <input class="btn btn-success" type="submit" v-on:click="submit" value="Checkout">
+                                                            </form>
+                                                    </div>
+                                                    </div>
+                                                </div> 
+                                                
+                                                </div>
+                                        </div>
+                            </div>
+
+                           
+                            <hr>
+
+                            
+
+                            
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const webstore = new Vue({
+            el: '#app',
+            data: {
+                search: '',
+                sitename: 'Lessons',
+                lessons: [],
+                cart: [],
+                showProduct: false,
+                order: {
+                    firstName: '',
+                    lastName: '',
+                },
+                sort: 'ascending',
+                type: '',
+                user: {
+                    name: '',
+                    number: ''
+                }
+            },
+            async created() {
+                let course = await fetch("https://coursework-two-individual.herokuapp.com/collection/wow")
+                let result = await course.json()
+                this.lessons = result
+                console.log(result)
+            },
+            methods: {
+                filteredList(){
+                    fetch(`https://coursework-two-individual.herokuapp.com/collection/wow/search?key_word=${this.search}`)
+                    .then(response => {
+                        return response.json()
+                    })
+                    .then(data => {
+                        this.lessons = data
+                    })
+                },
+                addToCart(lesson) {
+                    this.lessons.find(item => item.id == lesson.id).availableInventory -= 1;
+                    this.cart.push({ cartId: (this.cart.length + 1), ...lesson });
+                    // console.log('adding to cart', lesson.id)
+                },
+                removeFromCart(lesson) {
+                    if (confirm('You are about to delete this!')) {
+                        this.cart = [...this.cart].filter(item => item.cartId != lesson.cartId)
+                    }
+                },
+                showCheckout() {
+                    this.showProduct = !this.showProduct;
+                },
+                submit() {
+                    console.log("I am working")
+                    let orders = {
+                        checkoutName: this.user.name,
+                        checkoutPhone: this.user.number,
+                        cartProduct: this.cart,
+                    }
+                    let order_details = (JSON.stringify(orders))
+                    fetch('https://coursework-two-individual.herokuapp.com/collection/order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        mode: "cors",
+                        cache: "no-store",
+                        body: order_details,
+                    })
+                    .then(response => response.json())
+                    .then(json_response => {
+                        console.log(json_response)
+                        this.submitForm()
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                },
+                phonenumber(number) {
+                    if ((number.match(phoneno))) {
+                        return true;
+                    } 
+                },
+                submitForm() {
+                        alert("Happy Shopping...")
+                    },
+            },
+            computed: {
+                total() {
+                    return this.cart.length > 0 ? this.cart.map(item => item.price).reduce((acc, cur) => acc + cur) : 0;
+                },
+                //Everything here is for sorting lessons
+                sortedLessons() {
+                    switch (this.type) {
+                        case 'subject':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.subject.toUpperCase() > b.subject.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.subject.toUpperCase() < b.subject.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'location':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.location.toUpperCase() > b.location.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.location.toUpperCase() < b.location.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'price':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.price - b.price : b.price - a.price;
+                            })
+                        case 'space':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.availableInventory - b.availableInventory : b.availableInventory - a.availableInventory;
+                            })
+                        default:
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.id - b.id : b.id - a.id;
+                            })
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

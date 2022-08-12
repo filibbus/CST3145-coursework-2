@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "2232df97-4ac3-494d-a4d1-9ce4dd5e2f3c",
+		"name": "CW2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10567394"
+	},
+	"item": [
+		{
+			"name": "GETLessons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coursework-two-individual.herokuapp.com/collection/wow",
+					"protocol": "https",
+					"host": [
+						"coursework-two-individual",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"collection",
+						"wow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://coursework-two-individual.herokuapp.com/collection/order",
+					"protocol": "https",
+					"host": [
+						"coursework-two-individual",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"collection",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "https://coursework-two-individual.herokuapp.com/collection/wow",
+					"protocol": "https",
+					"host": [
+						"coursework-two-individual",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"collection",
+						"wow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GETOrders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coursework-two-individual.herokuapp.com/collection/order",
+					"protocol": "https",
+					"host": [
+						"coursework-two-individual",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"collection",
+						"order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

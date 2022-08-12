@@ -1,0 +1,5 @@
+Node and Express link on Github: https://github.com/CodeHulk614/Individual-Coursework-2/blob/main/server.js
+
+Index.js link on Github: https://github.com/CodeHulk614/Individual-Coursework-2/blob/main/index.html
+
+Heroku link: https://coursework-two-individual.herokuapp.com/collection/wow
